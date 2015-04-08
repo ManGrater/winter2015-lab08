@@ -31,7 +31,8 @@ class Application extends CI_Controller {
      * Render this page
      */
     function render() {
-        $this->data['menubar'] = $this->parser->parse('_menubar', $this->config->item('menu_choices'),true);
+        //$this->data['menubar'] = $this->parser->parse('_menubar', $this->config->item('menu_choices'),true);
+        $this->data['menubar'] = $this->parser->parse('_menubar', $this->makemenu(), true);
         $this->data['content'] = $this->parser->parse($this->data['pagebody'], $this->data, true);
 
         // finally, build the browser page!
@@ -54,6 +55,28 @@ class Application extends CI_Controller {
         return;
       }
     }
+  }
+
+  private function makemenu() {
+    $menu = array();
+    $menudata = array();
+    $user = $this->session->userdata;
+
+    $menudata[] = array('name' => 'Alpha', 'link' => 'alpha');
+
+    if (!isset($user['userID'])) {
+      $menudata[] = array('name' => 'Login', 'link' => '/auth');
+    }
+    else {
+      $menudata[] = array('name' => 'Beta', 'link' => '/beta');
+      if ($user['userRole'] == ROLE_ADMIN) {
+        $menudata[] = array('name' => 'Gamma', 'link' => '/gamma');
+      }
+      $menudata[] = array('name' => 'Log out', 'link' => '/auth/logout');
+    }
+    $menu['menudata'] = $menudata;
+
+    return $menu;
   }
 
 }
