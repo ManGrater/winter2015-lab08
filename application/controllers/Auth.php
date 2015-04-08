@@ -21,4 +21,10 @@ class Auth extends Application {
     }
     redirect('/');
   }
+
+  function logout() {
+    $this->session->sess_destroy();
+    redirect('/');
+  }
+
 }
